@@ -65,10 +65,18 @@ curl -sS -X POST "https://api.openai.com/v1/images/generations" \
   }' | jq -r '.data[0].b64_json' | base64 --decode > "<output-path>.png"
 ```
 
-### Fallback — Python decode (when `jq` / `base64` are missing)
+### Fallback — Python decode (when `jq` is missing — the common case here)
 
-`jq` and `base64` are not always installed in Git Bash on Windows. In that case,
-pipe the raw JSON response to Python, which is reliably available:
+`jq` is **not** installed in Git Bash on this machine, so the primary path above
+will not work — use this fallback by default. Pipe the raw JSON response to a
+file and decode it with Python.
+
+Two Windows gotchas, both verified on this machine:
+- The Python launcher is **`py`** (Python 3.14). Plain `python` is the Microsoft
+  Store stub and fails. Use `py`, falling back to `python3` / `python`.
+- `py` is native Windows Python and does **not** understand Git Bash's `/tmp`
+  path. Write the response file to a **relative path inside the project**, not
+  `/tmp`.
 
 ```bash
 export $(grep -v '^#' .env | grep OPENAI_API_KEY | xargs)
@@ -82,10 +90,14 @@ curl -sS -X POST "https://api.openai.com/v1/images/generations" \
     "size": "1024x1024",
     "quality": "medium",
     "output_format": "png"
-  }' > /tmp/gpt-image-response.json
+  }' > gpt-image-response.json
 
-python -c "import json,base64,sys; d=json.load(open('/tmp/gpt-image-response.json')); open('<output-path>.png','wb').write(base64.b64decode(d['data'][0]['b64_json']))"
+py -c "import json,base64; d=json.load(open('gpt-image-response.json')); open('<output-path>.png','wb').write(base64.b64decode(d['data'][0]['b64_json']))"
+
+rm -f gpt-image-response.json   # clean up the temp response
 ```
+
+If `py` is unavailable, try `python3` or `python` with the same `-c` argument.
 
 If the response has no `data` field, print it — it will contain the API error
 message (bad key, bad parameter, rate limit, etc.). Read the error and fix the
