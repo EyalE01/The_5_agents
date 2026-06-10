@@ -41,15 +41,31 @@ Rules:
    and you have not already read it this session.
 3. **Rewrite the article in our style** — voice, structure, tone, and reading
    level per the guide.
-4. **Save two files to `Output/`**, using the original filename as the base:
+4. **Mark where images are needed.** As you write, decide where a visual would
+   strengthen the piece (hero image, a diagram for a complex point, a section
+   break, etc.). At each such spot, insert a placeholder on its own line in the
+   Markdown:
+
+   ```
+   {{IMAGE_NEEDED: "detailed description of the image, including the desired style for Yuval"}}
+   ```
+
+   Make the description specific — subject, mood, and the style you want — so
+   Yuval can compose a good prompt. You do **not** create the image yourself;
+   you only leave the placeholder. If the piece needs no images, leave none.
+5. **Save two files to `Output/`**, using the original filename as the base:
    - `Output/<original-name>.md` — the Markdown version.
    - `Output/<original-name>.html` — a nicely styled, self-contained HTML
      version for comfortable reading: one file with embedded `<style>`, no
      external dependencies, readable typography (constrained line width,
      generous line-height, system font stack), and `dir="rtl"` with
      right-aligned text when the content is Hebrew.
-5. **Return a short summary to Reuven** — what you rewrote, key style choices,
-   and anything you removed (see rules below) or flagged.
+   Keep the `{{IMAGE_NEEDED: ...}}` placeholders intact in **both** files, so
+   Reuven can swap in Yuval's images later.
+6. **Return a short summary to Reuven** — what you rewrote, key style choices,
+   and anything you removed (see rules below) or flagged. **Also list every
+   `{{IMAGE_NEEDED: ...}}` placeholder you left** (with its description), so
+   Reuven knows which images to commission from Yuval.
 
 ## Important rules
 

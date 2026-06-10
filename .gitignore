@@ -1,0 +1,6 @@
+# Local secrets — never commit real keys.
+.env
+
+# Yuval's generated outputs (regenerable; keep the folder via .gitkeep).
+yuval/outputs/*
+!yuval/outputs/.gitkeep
